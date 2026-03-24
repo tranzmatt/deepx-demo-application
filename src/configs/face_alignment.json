@@ -1,0 +1,116 @@
+{
+    "description": "Customer Sentiment (Emotion AI)",
+    "sub_description": "Retail / Kiosk Analytics / Hospitality",
+    "adapter": "face_alignment",
+    "usage": "detection",
+    "model": {
+        "path": "./src/models/YOLOV5S_Face-1.dxnn",
+        "param": {
+            "name": "yolo_face",
+            "input_width": 640,
+            "input_height": 640,
+            "score_threshold": 0.25,
+            "iou_threshold": 0.4,
+            "last_activation": "sigmoid",
+            "decoding_method": "yolo_face",
+            "box_format": "center",
+            "kpt_order": "front",
+            "kpt_count": 5,
+            "final_outputs": [
+                "704"
+            ],
+            "layer": [
+                {
+                    "name": "704",
+                    "shape": [
+                        1,
+                        25200,
+                        16
+                    ]
+                },
+                {
+                    "name": "/model.23/m.0/Conv_output_0",
+                    "stride": 8,
+                    "anchor_width": [
+                        4,
+                        8,
+                        13
+                    ],
+                    "anchor_height": [
+                        5,
+                        10,
+                        16
+                    ]
+                },
+                {
+                    "name": "/model.23/m.1/Conv_output_0",
+                    "stride": 16,
+                    "anchor_width": [
+                        23,
+                        43,
+                        73
+                    ],
+                    "anchor_height": [
+                        29,
+                        55,
+                        105
+                    ]
+                },
+                {
+                    "name": "/model.23/m.2/Conv_output_0",
+                    "stride": 32,
+                    "anchor_width": [
+                        146,
+                        231,
+                        335
+                    ],
+                    "anchor_height": [
+                        217,
+                        300,
+                        433
+                    ]
+                }
+            ]
+        }
+    },
+    "emotion_model": {
+        "path": "./src/models/efficientnet_affectnet.dxnn",
+        "param": {
+            "input_width": 224,
+            "input_height": 224,
+            "classes": [
+                "neutral",
+                "happy",
+                "sad",
+                "surprise",
+                "fear",
+                "disgust",
+                "anger",
+                "contempt"
+            ]
+        }
+    },
+    "input": {
+        "format": "RGB",
+        "sources": [
+            {
+                "type": "libcamera",
+                "path": "0:1280:720:30",
+                "flip": true
+            }
+        ]
+    },
+    "output": {
+        "description": "Debug output - no post-processing",
+        "classes": [],
+        "type": "none"
+    },
+    "application": {
+        "description": "realtime debug",
+        "type": "realtime",
+        "resolution": [
+            960,
+            540
+        ]
+    }
+}

@@ -1,0 +1,145 @@
+{
+    "description": "Traffic Flow Monitor (Vehicle Counting)",
+    "sub_description": "Smart City / ITS / Road Monitoring",
+    "usage": "smart_traffic",
+    "adapter": "smart_traffic",
+    "model": {
+        "path": "./src/models/yolov8l-ppu.dxnn",
+        "param": {
+            "name": "YOLOV8L_PPU",
+            "input_width": 640,
+            "input_height": 640,
+            "score_threshold": 0.3,
+            "iou_threshold": 0.4,
+            "last_activation": "sigmoid",
+            "decoding_method": "yolo_basic",
+            "box_format": "center",
+            "final_outputs": [
+                "output"
+            ],
+            "layer": [
+                {
+                    "name": "output",
+                    "shape": [
+                        1,
+                        16128,
+                        85
+                    ]
+                }
+            ]
+        }
+    },
+    "input": {
+        "format": "RGB",
+        "sources": [
+            {
+                "type": "video",
+                "path": "src/videos/traffic.mp4"
+            },
+            {
+                "type": "rtsp",
+                "path": ""
+            }
+        ]
+    },
+    "output": {
+        "description": "Vehicle detection",
+        "classes": [
+            "person",
+            "bicycle",
+            "car",
+            "motorcycle",
+            "airplane",
+            "bus",
+            "train",
+            "truck",
+            "boat",
+            "traffic light",
+            "fire hydrant",
+            "stop sign",
+            "parking meter",
+            "bench",
+            "bird",
+            "cat",
+            "dog",
+            "horse",
+            "sheep",
+            "cow",
+            "elephant",
+            "bear",
+            "zebra",
+            "giraffe",
+            "backpack",
+            "umbrella",
+            "handbag",
+            "tie",
+            "suitcase",
+            "frisbee",
+            "skis",
+            "snowboard",
+            "sports ball",
+            "kite",
+            "baseball bat",
+            "baseball glove",
+            "skateboard",
+            "surfboard",
+            "tennis racket",
+            "bottle",
+            "wine glass",
+            "cup",
+            "fork",
+            "knife",
+            "spoon",
+            "bowl",
+            "banana",
+            "apple",
+            "sandwich",
+            "orange",
+            "broccoli",
+            "carrot",
+            "hot dog",
+            "pizza",
+            "donut",
+            "cake",
+            "chair",
+            "couch",
+            "potted plant",
+            "bed",
+            "dining table",
+            "toilet",
+            "tv",
+            "laptop",
+            "mouse",
+            "remote",
+            "keyboard",
+            "cell phone",
+            "microwave",
+            "oven",
+            "toaster",
+            "sink",
+            "refrigerator",
+            "book",
+            "clock",
+            "vase",
+            "scissors",
+            "teddy bear",
+            "hair drier",
+            "toothbrush"
+        ],
+        "type": "yolo"
+    },
+    "application": {
+        "description": "Smart Traffic Counting",
+        "type": "realtime",
+        "line": [
+            0,
+            0.6648,
+            1,
+            0.6648
+        ],
+        "resolution": [
+            960,
+            540
+        ]
+    }
+}
