@@ -1,0 +1,107 @@
+{
+    "description": "Touchless Control (Hand Landmarks)",
+    "sub_description": "HMI / Consumer / Industrial UI",
+    "adapter": "hand_landmark",
+    "usage": "detection",
+    "model": {
+        "path": "./src/models/hand-landmark.dxnn",
+        "param": {
+            "name": "hand_landmark",
+            "input_width": 640,
+            "input_height": 640,
+            "score_threshold": 0.15,
+            "iou_threshold": 0.4,
+            "last_activation": "sigmoid",
+            "decoding_method": "yolo_pose",
+            "box_format": "center",
+            "kpt_order": "front",
+            "kpt_count": 21,
+            "final_outputs": [
+                "POSE"
+            ],
+            "layer": [
+                {
+                    "name": "ppu_0",
+                    "stride": 8,
+                    "anchor_width": [
+                        19,
+                        44,
+                        38
+                    ],
+                    "anchor_height": [
+                        27,
+                        40,
+                        94
+                    ]
+                },
+                {
+                    "name": "ppu_1",
+                    "stride": 16,
+                    "anchor_width": [
+                        96,
+                        86,
+                        180
+                    ],
+                    "anchor_height": [
+                        68,
+                        152,
+                        137
+                    ]
+                },
+                {
+                    "name": "ppu_2",
+                    "stride": 32,
+                    "anchor_width": [
+                        140,
+                        303,
+                        238
+                    ],
+                    "anchor_height": [
+                        301,
+                        264,
+                        542
+                    ]
+                },
+                {
+                    "name": "ppu_3",
+                    "stride": 64,
+                    "anchor_width": [
+                        436,
+                        739,
+                        925
+                    ],
+                    "anchor_height": [
+                        615,
+                        380,
+                        792
+                    ]
+                }
+            ]
+        }
+    },
+    "input": {
+        "format": "RGB",
+        "sources": [
+            {
+                "type": "libcamera",
+                "path": "0:1280:720:30",
+                "flip": true
+            }
+        ]
+    },
+    "output": {
+        "description": "output type is used for post processing, that yolo, ssd, etc...",
+        "classes": [
+            "hand"
+        ],
+        "type": "yolo"
+    },
+    "application": {
+        "description": "result of post-processing after inference",
+        "type": "realtime",
+        "resolution": [
+            960,
+            540
+        ]
+    }
+}

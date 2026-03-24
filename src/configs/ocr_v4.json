@@ -1,0 +1,88 @@
+{
+    "adapter_type": "ocr",
+    "description": "Label & Text Reader (OCR)",
+    "sub_description": "Logistics / Manufacturing / Document Automation",
+    "det_model": {
+        "path": "src/model_files/v4/det.dxnn",
+        "input_size": 480
+    },
+    "cls_model": {
+        "path": "src/model_files/v4/cls.dxnn"
+    },
+    "rec_model": {
+        "models": [
+            {
+                "ratio": 5,
+                "height": 10,
+                "path": "src/model_files/v4/rec_ratio_5_height_10.dxnn"
+            },
+            {
+                "ratio": 5,
+                "height": 20,
+                "path": "src/model_files/v4/rec_ratio_5_height_20.dxnn"
+            },
+            {
+                "ratio": 5,
+                "height": 30,
+                "path": "src/model_files/v4/rec_ratio_5_height_30.dxnn"
+            },
+            {
+                "ratio": 15,
+                "height": 10,
+                "path": "src/model_files/v4/rec_ratio_15_height_10.dxnn"
+            },
+            {
+                "ratio": 15,
+                "height": 20,
+                "path": "src/model_files/v4/rec_ratio_15_height_20.dxnn"
+            },
+            {
+                "ratio": 15,
+                "height": 30,
+                "path": "src/model_files/v4/rec_ratio_15_height_30.dxnn"
+            },
+            {
+                "ratio": 25,
+                "height": 10,
+                "path": "src/model_files/v4/rec_ratio_25_height_10.dxnn"
+            },
+            {
+                "ratio": 25,
+                "height": 20,
+                "path": "src/model_files/v4/rec_ratio_25_height_20.dxnn"
+            },
+            {
+                "ratio": 25,
+                "height": 30,
+                "path": "src/model_files/v4/rec_ratio_25_height_30.dxnn"
+            }
+        ]
+    },
+    "post_process": {
+        "det_thresh": 0.3,
+        "det_box_thresh": 0.6,
+        "unclip_ratio": 1.5,
+        "char_dict_path": "src/model_files/ppocr_keys_v1.txt"
+    },
+    "input": {
+        "sources": [
+            {
+                "type": "image",
+                "path": "src/images/ocr1.png"
+            },
+            {
+                "type": "image",
+                "path": "src/images/ocr2.png"
+            },
+            {
+                "type": "image",
+                "path": "src/images/book.jpg"
+            },
+            {
+                "type": "libcamera",
+                "path": "0:1280:720:30",
+                "flip": true
+            }
+        ]
+    }
+}
