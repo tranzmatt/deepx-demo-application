@@ -24,18 +24,6 @@ Use a standard USB camera (V4L2 device) as input.
 }
 ```
 
-You can also specify a secondary/fallback camera:
-
-```json
-"sources": [
-    {
-        "type": "camera",
-        "path": "/dev/video0",
-        "secondary_path": "/dev/video1"
-    }
-]
-```
-
 To find available USB cameras on your system:
 
 ```bash
@@ -87,19 +75,6 @@ Common RTSP URL patterns by manufacturer:
 | Dahua        | `rtsp://<user>:<pass>@<ip>:554/cam/realmonitor?channel=1&subtype=0` |
 | Amcrest      | `rtsp://<user>:<pass>@<ip>:554/cam/realmonitor?channel=1&subtype=0` |
 
-You can also use an RTSP stream as a secondary fallback for a USB camera:
-
-```json
-"sources": [
-    {
-        "type": "camera",
-        "path": "/dev/video0",
-        "secondary_path": "rtsp://192.168.1.100:554/live",
-        "secondary_type": "video"
-    }
-]
-```
-
 #### Video File (`video`)
 
 Use a local video file (MP4, AVI, etc.) as input.
@@ -132,7 +107,7 @@ Use static image files as input (useful for OCR or single-frame analysis).
 |:------------|:-----------|:------------|
 | `yolov8n_ppu_libcamera_rpi.json` | RPi Camera | Object detection with Raspberry Pi Camera Module |
 | `yolov11_ppu_realtime_example.json` | USB Camera + RTSP fallback | PPE compliance detection |
-| `yolov5s_ppu_mask_detection_realtime.json` | Dual USB Camera | Mask detection with primary/secondary cameras |
+| `yolov5s_ppu_mask_detection_realtime.json` | Dual USB Camera | Mask detection with cameras |
 | `smart_traffic_config.json` | Video File + RTSP | Traffic flow monitoring |
 | `yolov8n_ppu_realtime_example_trespassing.json` | Multi-channel Video | 4-channel perimeter intrusion detection |
 | `multi_videofiles_36ch.json` | Multi-channel Video | 36-channel large-scale video analytics |
