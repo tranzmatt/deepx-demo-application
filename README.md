@@ -2,6 +2,32 @@
 
 This interactive demo provides a "DeepX AI Vision Platform" UI with real-time hardware monitoring, multi-stream video processing, and a diverse set of AI inference examples.
 
+## Getting Started
+
+### Quick Install (One-Liner)
+
+Clone and build the project with a single command. The installer checks for `git`, installs it if missing, clones this repo, and runs `build.sh`.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sixfab/deepx-demo-application/master/install.sh | bash
+```
+
+### Manual Build
+
+You can use the provided `build.sh` script to install dependencies, download required AI model resources (`resources.zip`), and compile the project automatically.
+
+```bash
+./build.sh
+```
+
+### 2. Run the Application
+
+Once the build finishes successfully, the application executable will be located in the `build/` directory.
+
+```bash
+./build/cpp_qt_app
+```
+
 ## Video Source Configuration
 
 The application supports multiple camera and video input types. Video sources are configured in the JSON config files located in `src/configs/`. Each config file has an `input.sources` array where you define one or more video sources.
@@ -112,30 +138,3 @@ Use static image files as input (useful for OCR or single-frame analysis).
 | `yolov8n_ppu_realtime_example_trespassing.json` | Multi-channel Video | 4-channel perimeter intrusion detection |
 | `multi_videofiles_36ch.json` | Multi-channel Video | 36-channel large-scale video analytics |
 | `ocr_v4.json` | Image + RPi Camera | OCR with static images and live camera |
-
-## Getting Started
-
-### Quick Install (One-Liner)
-
-Clone and build the project with a single command. The installer checks for `git`, installs it if missing, clones this repo, and runs `build.sh`.
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/sixfab/deepx-demo-application/master/install.sh | bash
-```
-
-### Manual Build
-
-You can use the provided `build.sh` script to install dependencies, download required AI model resources (`resources.zip`), and compile the project automatically.
-
-```bash
-./build.sh
-```
-
-### 2. Run the Application
-
-Once the build finishes successfully, the application executable will be located in the `build/` directory.
-
-```bash
-./build/cpp_qt_app
-```
-
