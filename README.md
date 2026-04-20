@@ -115,7 +115,15 @@ Use static image files as input (useful for OCR or single-frame analysis).
 
 ## Getting Started
 
-### 1. Build the Application
+### Quick Install (One-Liner)
+
+Clone and build the project with a single command. The installer checks for `git`, installs it if missing, clones this repo, and runs `build.sh`.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sixfab/deepx-demo-application/master/install.sh | bash
+```
+
+### Manual Build
 
 You can use the provided `build.sh` script to install dependencies, download required AI model resources (`resources.zip`), and compile the project automatically.
 
@@ -130,3 +138,4 @@ Once the build finishes successfully, the application executable will be located
 ```bash
 ./build/cpp_qt_app
 ```
+
