@@ -37,8 +37,8 @@
                 "path": "src/videos/traffic.mp4"
             },
             {
-                "type": "rtsp",
-                "path": ""
+                "type": "video",
+                "path": "src/videos/blackbox-city-road.mp4"
             }
         ]
     },

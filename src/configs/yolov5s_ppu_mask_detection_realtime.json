@@ -73,9 +73,8 @@
         "format": "RGB",
         "sources": [
             {
-                "type": "camera",
-                "path": "/dev/video0",
-                "secondary_path": "/dev/video1"
+                "type": "video",
+                "path": "src/videos/dpm.mp4"
             }
         ]
     },

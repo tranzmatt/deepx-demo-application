@@ -83,9 +83,8 @@
         "format": "RGB",
         "sources": [
             {
-                "type": "libcamera",
-                "path": "0:1280:720:30",
-                "flip": true
+                "type": "video",
+                "path": "src/videos/construction.mp4"
             }
         ]
     },
