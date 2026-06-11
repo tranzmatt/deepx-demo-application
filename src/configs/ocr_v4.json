@@ -79,9 +79,8 @@
                 "path": "src/images/book.jpg"
             },
             {
-                "type": "libcamera",
-                "path": "0:1280:720:30",
-                "flip": true
+                "type": "video",
+                "path": "src/videos/mall-complete.mp4"
             }
         ]
     }

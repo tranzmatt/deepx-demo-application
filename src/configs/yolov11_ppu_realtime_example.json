@@ -50,10 +50,8 @@
         "format": "RGB",
         "sources": [
             {
-                "type": "camera",
-                "path": "/dev/video0",
-                "secondary_path": "rtsp://192.168.1.100:554/live",
-                "secondary_type": "video"
+                "type": "video",
+                "path": "src/videos/mall-complete.mp4"
             }
         ]
     },
