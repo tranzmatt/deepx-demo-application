@@ -5,19 +5,18 @@
 #include <QThread>
 #include <QElapsedTimer>
 #include <cmath>
-#include <dxrt/device_pool.h>
-#include <dxrt/device_task_layer.h>
+#include <algorithm>
+#include <dxrt/dxrt_cxx_api.h>
 
-SystemMonitor::SystemMonitor(QObject* parent) 
+SystemMonitor::SystemMonitor(QObject* parent)
     : QObject(parent)
     , m_timer(nullptr)
     , m_cpuUsage(0.0)
     , m_npuUsage(0.0)
     , m_cpuTemp(0.0)
     , m_npuTemp(0.0)
-    , m_ipcClient(dxrt::IPCDefaultType(), getpid() + 1234)
     , m_initialized(false)
-    , m_ipcReady(false)
+    , m_monitoringActive(false)
     , m_staticInfoLoaded(false)
     , m_statsFetchInProgress(false)
 {
@@ -30,18 +29,23 @@ SystemMonitor::~SystemMonitor() {
 
 void SystemMonitor::start(int intervalMs) {
     if (!m_initialized) {
-        dxrt::DevicePool::GetInstance().InitCores();
         try {
-            int ret = m_ipcClient.Initialize(false);
-            if (ret == 0) {
-                m_ipcReady = true;
-            } else {
-                qWarning() << "SystemMonitor: IPC Init failed:" << ret;
+            auto& pool = dxrt::DevicePool::GetInstance();
+            pool.InitCores();
+            // Utilization and memory usage come from the dxrtd shared memory
+            // segment; if dxrtd is not publishing, those fields stay at zero.
+            m_monitoringActive = pool.GetDeviceCount() > 0 &&
+                                 dxrt::DeviceStatus::GetCurrentStatus(0).IsValid();
+            if (!m_monitoringActive) {
+                qWarning() << "SystemMonitor: dxrtd monitoring data unavailable";
             }
+        } catch (const dxrt::Exception& e) {
+            qWarning() << "SystemMonitor: device pool init failed:" << e.what();
         } catch (...) {
-            qWarning() << "SystemMonitor: IPC Init exception";
+            qWarning() << "SystemMonitor: device pool init exception";
         }
-        
+
+
         m_timer = new QTimer(this);
         connect(m_timer, &QTimer::timeout, this, &SystemMonitor::updateStats);
         m_initialized = true;
@@ -145,39 +149,36 @@ void SystemMonitor::readNpuStats() {
     using namespace dxrt;
     
     auto& pool = DevicePool::GetInstance();
-    int deviceCount = pool.GetDeviceCount();
+    int deviceCount = 0;
+    try {
+        deviceCount = static_cast<int>(pool.GetDeviceCount());
+    } catch (const Exception& e) {
+        qWarning() << "SystemMonitor: GetDeviceCount failed:" << e.what();
+        return;
+    }
 
     if (!m_staticInfoLoaded || m_cachedDevices.size() != (size_t)deviceCount) {
         m_cachedDevices.clear();
         for (int i = 0; i < deviceCount; ++i) {
-            auto devCore = pool.GetDeviceCores(i);
-            if (!devCore) continue;
+            auto status = DeviceStatus::GetCurrentStatus(i);
 
             NpuDeviceStats dStats;
             dStats.id = i;
-            auto info = devCore->info();
-            
-            switch (info.variant) {
-                case 100: dStats.variant = "L1"; break;
-                case 101: dStats.variant = "L2"; break;
-                case 102: dStats.variant = "L3"; break;
-                case 103: dStats.variant = "L4"; break;
-                case 200: case 201: case 202: dStats.variant = "M1"; break;
-                default: dStats.variant = QString("Unknown (%2)").arg(info.variant);
-            }
+            // The runtime now reports these directly as strings
+            // (e.g. "M1", "2.7.4", "Gen3 X1 [01:00:00]").
+            dStats.variant = QString::fromStdString(status.DeviceVariantStr());
+            if (dStats.variant.isEmpty()) dStats.variant = "Unknown";
 
-            dStats.firmware = QString("v%1.%2.%3")
-                                .arg(info.fw_ver / 100)
-                                .arg((info.fw_ver / 1) % 10)
-                                .arg(info.fw_ver % 10);
-            
-            auto devInfo = devCore->devInfo();
-            dStats.pcieBus = QString("%1:%2:%3")
-                                .arg(devInfo.pcie.bus, 2, 16, QChar('0'))
-                                .arg(devInfo.pcie.dev, 2, 16, QChar('0'))
-                                .arg(devInfo.pcie.func, 2, 16, QChar('0'));
+            const std::string fw = status.FirmwareVersionStr();
+            dStats.firmware = fw.empty() ? QString("Unknown")
+                                         : QString("v%1").arg(QString::fromStdString(fw));
 
-            dStats.totalMem = info.mem_size;
+            dStats.pcieBus = QString::fromStdString(status.PcieInfoStr());
+
+            const int64_t memSize = status.MemorySize();
+            dStats.totalMem = memSize > 0 ? static_cast<uint64_t>(memSize) : 0;
+            dStats.usedMem = 0;
+
             m_cachedDevices.push_back(dStats);
         }
         m_staticInfoLoaded = true;
@@ -189,46 +190,27 @@ void SystemMonitor::readNpuStats() {
     int coreCount = 0;
 
     for (auto& dStats : currentDevices) {
-        auto devCore = pool.GetDeviceCores(dStats.id);
-        if (!devCore) continue;
+        auto status = DeviceStatus::GetCurrentStatus(dStats.id);
 
-        if (m_ipcReady) {
-            // DRAM Usage via IPC
-            try {
-                IPCClientMessage msg;
-                IPCServerMessage resp;
-                msg.code = REQUEST_CODE::VIEW_USED_MEMORY;
-                msg.deviceId = dStats.id;
-                msg.pid = getpid() + 1234; // Matches identifier
-                m_ipcClient.SendToServer(resp, msg);
-                dStats.usedMem = resp.data;
-            } catch (...) {
-                dStats.usedMem = 0;
-            }
+        if (m_monitoringActive) {
+            // DRAM usage now comes from the dxrtd shared memory segment
+            // instead of a VIEW_USED_MEMORY IPC round-trip.
+            dStats.usedMem = status.GetMemoryUsed();
         }
 
         // Core Stats
-        auto status = devCore->Status();
         for (int c = 0; c < 3; ++c) { // DeepX NPU variant has 3 cores
             NpuCoreStats cStats;
             cStats.id = c;
-            cStats.temp = (status.temperature[c] > 200) ? 0 : status.temperature[c];
-            cStats.voltage = status.voltage[c];
-            cStats.clock = status.clock[c];
+            const int temp = status.Temperature(c);
+            cStats.temp = (temp > 200) ? 0 : temp;
+            cStats.voltage = static_cast<int>(status.Voltage(c));
+            cStats.clock = static_cast<int>(status.NpuClock(c));
 
-            if (m_ipcReady) {
-                try {
-                    IPCClientMessage msg;
-                    IPCServerMessage resp;
-                    msg.code = REQUEST_CODE::GET_USAGE;
-                    msg.deviceId = dStats.id;
-                    msg.data = c; 
-                    msg.pid = getpid() + 1234; // Matches identifier
-                    m_ipcClient.SendToServer(resp, msg);
-                    cStats.utilization = (double)resp.data / 10.0; 
-                } catch (...) {
-                    cStats.utilization = 0.0;
-                }
+            if (m_monitoringActive) {
+                // Already a 0.0-100.0 percentage; the old IPC path returned
+                // tenths of a percent and had to be divided by 10.
+                cStats.utilization = std::max(0.0, status.GetCoreUtilization(c));
             } else {
                 cStats.utilization = 0.0;
             }

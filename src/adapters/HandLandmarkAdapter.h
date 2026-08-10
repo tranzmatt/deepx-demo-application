@@ -4,7 +4,7 @@
 #include "BaseAdapter.h"
 #include "VideoSource.h"
 #include "YoloHandPosePostProcess.h"
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <memory>
 
 class HandLandmarkAdapter : public BaseAdapter {

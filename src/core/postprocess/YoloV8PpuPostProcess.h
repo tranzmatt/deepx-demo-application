@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include "Common.h"
 
 class YoloV8PpuPostProcess {

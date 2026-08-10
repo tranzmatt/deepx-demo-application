@@ -4,7 +4,7 @@
 #include "BaseAdapter.h"
 #include "VideoSource.h"
 #include "YoloPosePostProcess.h"
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <memory>
 
 class YoloPoseAdapter : public BaseAdapter {

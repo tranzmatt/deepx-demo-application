@@ -7,7 +7,7 @@
 #include "YoloV8PpuPostProcess.h"
 #include "YoloFacePostProcess.h"
 #include "YoloPosePostProcess.h"
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <memory>
 #include <vector>
 #include <thread>

@@ -4,7 +4,7 @@
 #include "BaseAdapter.h"
 #include "VideoSource.h"
 #include "OcrPostProcess.h"
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <map>
 #include <memory>
 

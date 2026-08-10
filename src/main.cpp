@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "MainWindow.h"
-#include <dxrt/device_pool.h>
+#include <dxrt/dxrt_cxx_api.h>
 
 int main(int argc, char *argv[]) {
     dxrt::DevicePool::GetInstance().InitCores();

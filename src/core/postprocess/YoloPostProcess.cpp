@@ -2,7 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
-#include <dxrt/datatype.h>
+#include <dxrt/dxrt_cxx_api.h>
 
 // Helper for IoU
 float YoloPostProcess::PpuResult::iou(const PpuResult& other) const {

@@ -4,7 +4,7 @@
 #include "BaseAdapter.h"
 #include "VideoSource.h"
 #include "YoloV8PpuPostProcess.h" // Uses V8 PostProcessing since configs point to V8 PPU model
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <memory>
 #include <deque>
 

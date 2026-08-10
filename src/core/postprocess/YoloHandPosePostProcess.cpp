@@ -1,7 +1,7 @@
 #include "YoloHandPosePostProcess.h"
 #include <cmath>
 #include <algorithm>
-#include <dxrt/datatype.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <iostream>
 #include <QDebug>
 

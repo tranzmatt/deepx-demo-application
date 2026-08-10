@@ -1,7 +1,7 @@
 #include "YoloPosePostProcess.h"
 #include <cmath>
 #include <algorithm>
-#include <dxrt/datatype.h>
+#include <dxrt/dxrt_cxx_api.h>
 
 float YoloPosePostProcess::PoseResult::iou(const PoseResult& other) const {
     float x_left = std::max(box[0], other.box[0]);

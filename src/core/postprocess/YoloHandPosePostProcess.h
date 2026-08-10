@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include "Common.h"
 
 class YoloHandPosePostProcess {

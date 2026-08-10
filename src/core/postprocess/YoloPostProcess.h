@@ -1,7 +1,7 @@
 #ifndef YOLO_POSTPROCESS_H
 #define YOLO_POSTPROCESS_H
 
-#include <dxrt/dxrt_api.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <vector>
 #include <string>
 #include <map>

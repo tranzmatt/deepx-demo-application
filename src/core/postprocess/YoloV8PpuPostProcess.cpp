@@ -1,5 +1,5 @@
 #include "YoloV8PpuPostProcess.h"
-#include <dxrt/datatype.h>
+#include <dxrt/dxrt_cxx_api.h>
 #include <iostream>
 #include <algorithm>
 #include <cmath>

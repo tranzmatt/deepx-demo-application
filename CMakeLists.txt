@@ -17,8 +17,10 @@ find_package(OpenCV REQUIRED)
 # DXRT
 find_library(DXRT_LIB NAMES dxrt PATHS /usr/local/lib /usr/lib)
 if(NOT DXRT_LIB)
-    message(WARNING "DXRT library not found via find_library.")
+    # Without this the link line degenerates to -lDXRT_LIB-NOTFOUND
+    message(FATAL_ERROR "DXRT library not found. Install dx_rt (expected libdxrt.so in /usr/local/lib).")
 endif()
+message(STATUS "DXRT library found: ${DXRT_LIB}")
 
 # Raspberry Pi libcamera support (optional)
 option(ENABLE_LIBCAMERA "Enable native Raspberry Pi camera support via libcamera" ON)

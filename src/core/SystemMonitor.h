@@ -6,7 +6,7 @@
 #include <QMutex>
 #include <vector>
 #include <QString>
-#include <dxrt/ipc_wrapper/ipc_client_wrapper.h>
+#include <dxrt/dxrt_cxx_api.h>
 
 class SystemMonitor : public QObject {
     Q_OBJECT
@@ -61,9 +61,9 @@ private:
     double m_npuTemp;
     std::vector<NpuDeviceStats> m_npuDevices;
 
-    dxrt::IPCClientWrapper m_ipcClient;
     bool m_initialized;
-    bool m_ipcReady;
+    // dxrtd shared-memory monitoring availability (utilization / memory usage)
+    bool m_monitoringActive;
     bool m_staticInfoLoaded;
     std::vector<NpuDeviceStats> m_cachedDevices;
     
