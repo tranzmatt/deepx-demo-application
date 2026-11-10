@@ -79,6 +79,10 @@
                 "path": "src/images/book.jpg"
             },
             {
+                "type": "image",
+                "path": "src/images/testocr.png"
+            },
+            {
                 "type": "video",
                 "path": "src/videos/mall-complete.mp4"
             }
